@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Expense Tracker | Professional Personal Finance Management System</title>
+  <meta name="description" content="Smart Expense Tracker - a professional personal finance management dashboard to track income, expenses, budgets and savings." />
+  <meta name="author" content="Karthik Yadav" />
+
+  <!-- Google Fonts: Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===================== SKIP LINK (ACCESSIBILITY) ===================== -->
+  <a href="#mainContent" class="skip-link">Skip to main content</a>
+
+  <!-- ===================== PAGE LOADER ===================== -->
+  <div class="page-loader" id="pageLoader" aria-hidden="true">
+    <div class="loader-ring"></div>
+    <p class="loader-text">Loading Smart Expense Tracker...</p>
+  </div>
+
+  <!-- ===================== SCROLL PROGRESS BAR ===================== -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- ===================== TOAST CONTAINER ===================== -->
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ===================== HEADER / NAVIGATION ===================== -->
+  <header class="site-header" id="siteHeader">
+    <nav class="navbar" aria-label="Primary navigation">
+      <div class="nav-container">
+
+        <a href="#hero" class="nav-logo" aria-label="Smart Expense Tracker Home">
+          <span class="logo-icon"><i class="fa-solid fa-wallet"></i></span>
+          <span class="logo-text">Smart<span class="logo-accent">Expense</span></span>
+        </a>
+
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#hero" class="nav-link active-link" data-nav>Dashboard</a></li>
+          <li><a href="#transactions" class="nav-link" data-nav>Transactions</a></li>
+          <li><a href="#analytics" class="nav-link" data-nav>Analytics</a></li>
+          <li><a href="#budget" class="nav-link" data-nav>Budget</a></li>
+          <li><a href="#" class="nav-link" id="settingsNavBtn" data-nav>Settings</a></li>
+          <li><a href="#contact" class="nav-link" data-nav>Contact</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle dark mode" title="Toggle Dark Mode">
+            <i class="fa-solid fa-moon" id="themeIcon"></i>
+          </button>
+
+          <button class="icon-btn profile-btn" id="profileBtn" aria-label="View profile" title="Karthik Yadav">
+            <i class="fa-solid fa-circle-user"></i>
+          </button>
+
+          <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </button>
+        </div>
+
+      </div>
+    </nav>
+  </header>
+
+  <main id="mainContent">
+
+    <!-- ===================== HERO SECTION ===================== -->
+    <section class="hero" id="hero" aria-labelledby="heroHeading">
+      <div class="hero-container">
+
+        <div class="hero-content">
+          <span class="eyebrow-badge">
+            <i class="fa-solid fa-sparkles"></i> Professional Personal Finance Management
+          </span>
+          <h1 id="heroHeading" class="hero-heading">
+            Take full control of your <span class="text-gradient">money</span>, every single day.
+          </h1>
+          <p class="hero-subtext">
+            Smart Expense Tracker helps you record income and expenses, monitor your monthly budget,
+            and understand your spending habits through clear, real-time financial reports.
+          </p>
+
+          <div class="hero-quick-actions">
+            <button class="btn btn-primary ripple" id="heroAddIncomeBtn">
+              <i class="fa-solid fa-arrow-trend-up"></i> Add Income
+            </button>
+            <button class="btn btn-danger-outline ripple" id="heroAddExpenseBtn">
+              <i class="fa-solid fa-arrow-trend-down"></i> Add Expense
+            </button>
+            <button class="btn btn-ghost ripple" id="heroViewReportsBtn">
+              <i class="fa-solid fa-chart-pie"></i> View Reports
+            </button>
+          </div>
+        </div>
+
+        <div class="hero-illustration" aria-hidden="true">
+          <div class="floating-card card-balance">
+            <i class="fa-solid fa-wallet"></i>
+            <div>
+              <p>Current Balance</p>
+              <h4 id="heroBalance">₹0.00</h4>
+            </div>
+          </div>
+          <div class="floating-card card-income">
+            <i class="fa-solid fa-arrow-trend-up"></i>
+            <div>
+              <p>Total Income</p>
+              <h4 id="heroIncome">₹0.00</h4>
+            </div>
+          </div>
+          <div class="floating-card card-expense">
+            <i class="fa-solid fa-arrow-trend-down"></i>
+            <div>
+              <p>Total Expense</p>
+              <h4 id="heroExpense">₹0.00</h4>
+            </div>
+          </div>
+          <div class="hero-glass-blob"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================== DASHBOARD STAT CARDS ===================== -->
+    <section class="dashboard-cards-section" id="dashboardCards" aria-label="Dashboard summary cards">
+      <div class="section-container">
+        <div class="stat-cards-grid" id="statCardsGrid">
+
+          <article class="stat-card" data-card="balance">
+            <div class="stat-icon icon-blue"><i class="fa-solid fa-scale-balanced"></i></div>
+            <div class="stat-info">
+              <p class="stat-title">Current Balance</p>
+              <h3 class="stat-value" id="statBalance" data-count="0">₹0.00</h3>
+              <span class="stat-desc">Income minus expenses</span>
+            </div>
+          </article>
+
+          <article class="stat-card" data-card="budget">
+            <div class="stat-icon icon-cyan"><i class="fa-solid fa-bullseye"></i></div>
+            <div class="stat-info">
+              <p class="stat-title">Monthly Budget</p>
+              <h3 class="stat-value" id="statBudget" data-count="0">₹0.00</h3>
+              <span class="stat-desc">Set in Budget section</span>
+            </div>
+          </article>
+
+          <article class="stat-card" data-card="income">
+            <div class="stat-icon icon-green"><i class="fa-solid fa-arrow-trend-up"></i></div>
+            <div class="stat-info">
+              <p class="stat-title">Total Income</p>
+              <h3 class="stat-value" id="statIncome" data-count="0">₹0.00</h3>
+              <span class="stat-desc">All time earnings</span>
+            </div>
+          </article>
+
+          <article class="stat-card" data-card="expense">
+            <div class="stat-icon icon-red"><i class="fa-solid fa-arrow-trend-down"></i></div>
+            <div class="stat-info">
+              <p class="stat-title">Total Expense</p>
+              <h3 class="stat-value" id="statExpense" data-count="0">₹0.00</h3>
+              <span class="stat-desc">All time spending</span>
+            </div>
+          </article>
+
+          <article class="stat-card" data-card="savings">
+            <div class="stat-icon icon-purple"><i class="fa-solid fa-piggy-bank"></i></div>
+            <div class="stat-info">
+              <p class="stat-title">Savings</p>
+              <h3 class="stat-value" id="statSavings" data-count="0">₹0.00</h3>
+              <span class="stat-desc">Budget left unspent</span>
+            </div>
+          </article>
+
+          <article class="stat-card" data-card="transactions">
+            <div class="stat-icon icon-orange"><i class="fa-solid fa-receipt"></i></div>
+            <div class="stat-info">
+              <p class="stat-title">Total Transactions</p>
+              <h3 class="stat-value" id="statTransactions" data-count="0">0</h3>
+              <span class="stat-desc">Recorded entries</span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ADD / EDIT TRANSACTION FORM ===================== -->
+    <section class="form-section" id="addTransaction" aria-labelledby="formHeading">
+      <div class="section-container">
+        <div class="section-heading">
+          <h2 id="formHeading"><i class="fa-solid fa-circle-plus"></i> Add Transaction</h2>
+          <p>Record a new income or expense entry. All fields marked with * are required.</p>
+        </div>
+
+        <form class="transaction-form glass-card" id="transactionForm" novalidate>
+          <input type="hidden" id="transactionId" value="" />
+
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label for="titleInput">Transaction Title *</label>
+              <input type="text" id="titleInput" name="title" placeholder="e.g. Grocery Shopping" autocomplete="off" required aria-required="true" />
+              <span class="error-msg" id="titleError" role="alert"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="amountInput">Amount (₹) *</label>
+              <input type="number" id="amountInput" name="amount" placeholder="e.g. 1500" min="0" step="0.01" required aria-required="true" />
+              <span class="error-msg" id="amountError" role="alert"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="categoryInput">Category *</label>
+              <select id="categoryInput" name="category" required aria-required="true">
+                <option value="">Select Category</option>
+                <option value="Food">Food &amp; Dining</option>
+                <option value="Transport">Transport</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Bills">Bills &amp; Utilities</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Health">Health &amp; Fitness</option>
+                <option value="Education">Education</option>
+                <option value="Salary">Salary</option>
+                <option value="Freelance">Freelance</option>
+                <option value="Investment">Investment</option>
+                <option value="Other">Other</option>
+              </select>
+              <span class="error-msg" id="categoryError" role="alert"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="typeInput">Transaction Type *</label>
+              <select id="typeInput" name="type" required aria-required="true">
+                <option value="expense">Expense</option>
+                <option value="income">Income</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="dateInput">Date *</label>
+              <input type="date" id="dateInput" name="date" required aria-required="true" />
+              <span class="error-msg" id="dateError" role="alert"></span>
+            </div>
+
+            <div class="form-group form-group-full">
+              <label for="notesInput">Notes</label>
+              <textarea id="notesInput" name="notes" rows="2" placeholder="Optional notes about this transaction..."></textarea>
+            </div>
+
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary ripple" id="submitTransactionBtn">
+              <i class="fa-solid fa-plus"></i> <span id="submitBtnText">Add Transaction</span>
+            </button>
+            <button type="button" class="btn btn-ghost ripple" id="resetFormBtn">
+              <i class="fa-solid fa-rotate-left"></i> Reset Form
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================== TRANSACTIONS TABLE ===================== -->
+    <section class="table-section" id="transactions" aria-labelledby="tableHeading">
+      <div class="section-container">
+        <div class="section-heading">
+          <h2 id="tableHeading"><i class="fa-solid fa-table-list"></i> Transaction History</h2>
+          <p>Search, filter, and sort all your recorded transactions.</p>
+        </div>
+
+        <div class="table-toolbar glass-card">
+
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="search" id="searchInput" placeholder="Search by title, category or amount..." aria-label="Search transactions" />
+          </div>
+
+          <div class="toolbar-filters">
+            <select id="filterCategory" aria-label="Filter by category">
+              <option value="all">All Categories</option>
+              <option value="Food">Food &amp; Dining</option>
+              <option value="Transport">Transport</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Bills">Bills &amp; Utilities</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Health">Health &amp; Fitness</option>
+              <option value="Education">Education</option>
+              <option value="Salary">Salary</option>
+              <option value="Freelance">Freelance</option>
+              <option value="Investment">Investment</option>
+              <option value="Other">Other</option>
+            </select>
+
+            <select id="filterType" aria-label="Filter by transaction type">
+              <option value="all">All Types</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+
+            <input type="month" id="filterMonth" aria-label="Filter by month" />
+
+            <select id="sortSelect" aria-label="Sort transactions">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="highest">Highest Amount</option>
+              <option value="lowest">Lowest Amount</option>
+              <option value="az">Alphabetical A-Z</option>
+              <option value="za">Alphabetical Z-A</option>
+            </select>
+
+            <button class="btn btn-ghost-sm ripple" id="resetFiltersBtn" title="Reset all filters">
+              <i class="fa-solid fa-filter-circle-xmark"></i> Reset
+            </button>
+          </div>
+
+          <div class="toolbar-export">
+            <button class="btn btn-outline-sm ripple" id="exportCsvBtn"><i class="fa-solid fa-file-csv"></i> CSV</button>
+            <button class="btn btn-outline-sm ripple" id="exportJsonBtn"><i class="fa-solid fa-file-code"></i> JSON</button>
+            <button class="btn btn-outline-sm ripple" id="printReportBtn"><i class="fa-solid fa-print"></i> Print</button>
+            <label class="btn btn-outline-sm ripple import-label" for="importFileInput">
+              <i class="fa-solid fa-file-import"></i> Import
+            </label>
+            <input type="file" id="importFileInput" accept="application/json" hidden />
+          </div>
+        </div>
+
+        <div class="table-wrapper glass-card">
+          <table class="transactions-table" id="transactionsTable">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Title</th>
+                <th scope="col">Category</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Type</th>
+                <th scope="col">Date</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="transactionsTableBody">
+              <!-- Rows injected dynamically by JavaScript -->
+            </tbody>
+          </table>
+
+          <div class="empty-state" id="emptyState" hidden>
+            <i class="fa-solid fa-box-open"></i>
+            <h3>No transactions found</h3>
+            <p>Start by adding your first income or expense above.</p>
+          </div>
+        </div>
+
+        <p class="results-count" id="resultsCount" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- ===================== ANALYTICS SECTION ===================== -->
+    <section class="analytics-section" id="analytics" aria-labelledby="analyticsHeading">
+      <div class="section-container">
+        <div class="section-heading">
+          <h2 id="analyticsHeading"><i class="fa-solid fa-chart-line"></i> Financial Analytics</h2>
+          <p>Visual breakdown of your income, expenses and spending categories.</p>
+        </div>
+
+        <div class="analytics-summary-grid">
+          <div class="analytics-mini-card glass-card">
+            <span>Monthly Income</span>
+            <strong id="anMonthlyIncome">₹0.00</strong>
+          </div>
+          <div class="analytics-mini-card glass-card">
+            <span>Monthly Expense</span>
+            <strong id="anMonthlyExpense">₹0.00</strong>
+          </div>
+          <div class="analytics-mini-card glass-card">
+            <span>Savings</span>
+            <strong id="anSavings">₹0.00</strong>
+          </div>
+          <div class="analytics-mini-card glass-card">
+            <span>Budget Used</span>
+            <strong id="anBudgetUsed">0%</strong>
+          </div>
+          <div class="analytics-mini-card glass-card">
+            <span>Budget Remaining</span>
+            <strong id="anBudgetRemaining">₹0.00</strong>
+          </div>
+          <div class="analytics-mini-card glass-card">
+            <span>Average Expense</span>
+            <strong id="anAvgExpense">₹0.00</strong>
+          </div>
+          <div class="analytics-mini-card glass-card">
+            <span>Highest Expense</span>
+            <strong id="anHighestExpense">₹0.00</strong>
+          </div>
+          <div class="analytics-mini-card glass-card">
+            <span>Lowest Expense</span>
+            <strong id="anLowestExpense">₹0.00</strong>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="chart-card glass-card">
+            <h3>Expenses by Category</h3>
+            <div class="chart-canvas-wrap">
+              <canvas id="categoryPieChart" role="img" aria-label="Pie chart of expenses by category"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card glass-card">
+            <h3>Monthly Expenses</h3>
+            <div class="chart-canvas-wrap">
+              <canvas id="monthlyBarChart" role="img" aria-label="Bar chart of monthly expenses"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card glass-card chart-card-wide">
+            <h3>Income vs Expense Trend</h3>
+            <div class="chart-canvas-wrap">
+              <canvas id="incomeExpenseLineChart" role="img" aria-label="Line chart comparing income and expense trend"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== BUDGET MANAGEMENT SECTION ===================== -->
+    <section class="budget-section" id="budget" aria-labelledby="budgetHeading">
+      <div class="section-container">
+        <div class="section-heading">
+          <h2 id="budgetHeading"><i class="fa-solid fa-wallet"></i> Budget Management</h2>
+          <p>Set your monthly budget and track how much you have spent.</p>
+        </div>
+
+        <div class="budget-grid">
+          <form class="budget-form glass-card" id="budgetForm">
+            <label for="budgetInput">Set Monthly Budget (₹)</label>
+            <div class="budget-input-row">
+              <input type="number" id="budgetInput" min="0" step="0.01" placeholder="e.g. 25000" />
+              <button type="submit" class="btn btn-primary ripple"><i class="fa-solid fa-check"></i> Update Budget</button>
+            </div>
+            <span class="error-msg" id="budgetError" role="alert"></span>
+          </form>
+
+          <div class="budget-progress-card glass-card" id="budgetProgressCard">
+            <div class="budget-progress-header">
+              <div>
+                <p>Spent</p>
+                <h4 id="budgetSpentAmount">₹0.00</h4>
+              </div>
+              <div>
+                <p>Remaining</p>
+                <h4 id="budgetRemainingAmount">₹0.00</h4>
+              </div>
+              <div>
+                <p>Used</p>
+                <h4 id="budgetUsedPercent">0%</h4>
+              </div>
+            </div>
+            <div class="progress-bar-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="budgetProgressBar">
+              <div class="progress-bar-fill" id="budgetProgressFill"></div>
+            </div>
+            <p class="budget-alert" id="budgetAlertMsg" hidden>
+              <i class="fa-solid fa-triangle-exclamation"></i> You have exceeded your monthly budget!
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CONTACT / ABOUT AUTHOR SECTION ===================== -->
+    <section class="contact-section" id="contact" aria-labelledby="contactHeading">
+      <div class="section-container">
+        <div class="section-heading">
+          <h2 id="contactHeading"><i class="fa-solid fa-address-card"></i> About the Developer</h2>
+          <p>Meet the developer behind Smart Expense Tracker.</p>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-card glass-card">
+            <div class="about-avatar"><i class="fa-solid fa-user-graduate"></i></div>
+            <h3>Karthik Yadav</h3>
+            <p class="about-role">Aspiring Full Stack Developer &amp; AI Engineer</p>
+            <p class="about-bio">
+              I am passionate about Full Stack Development, Artificial Intelligence, Machine Learning,
+              and creating modern web applications that solve real-world problems. I enjoy learning new
+              technologies, building responsive websites, and improving my software development skills
+              through practical projects.
+            </p>
+
+            <ul class="about-details-list">
+              <li><i class="fa-solid fa-graduation-cap"></i> B.Tech, Artificial Intelligence and Machine Learning (AIML)</li>
+              <li><i class="fa-solid fa-school"></i> Anurag Engineering College</li>
+              <li><i class="fa-solid fa-briefcase"></i> Web Development Intern, ApexPlanet Software Pvt. Ltd.</li>
+              <li><i class="fa-solid fa-location-dot"></i> Warangal, Telangana, India</li>
+            </ul>
+
+            <div class="about-contact-row">
+              <a href="mailto:karthuik@gmail.com" class="btn btn-outline-sm ripple"><i class="fa-solid fa-envelope"></i> Email</a>
+              <a href="tel:+918309908876" class="btn btn-outline-sm ripple"><i class="fa-solid fa-phone"></i> Call</a>
+              <a href="#" class="btn btn-outline-sm ripple"><i class="fa-brands fa-github"></i> GitHub</a>
+              <a href="#" class="btn btn-outline-sm ripple"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="footer-container">
+
+      <div class="footer-col">
+        <a href="#hero" class="nav-logo">
+          <span class="logo-icon"><i class="fa-solid fa-wallet"></i></span>
+          <span class="logo-text">Smart<span class="logo-accent">Expense</span></span>
+        </a>
+        <p>A professional personal finance management system built for modern budgeting.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Developer</h4>
+        <p>Karthik Yadav</p>
+        <p>Anurag Engineering College</p>
+        <p>Artificial Intelligence &amp; Machine Learning</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <p><i class="fa-solid fa-envelope"></i> karthuik@gmail.com</p>
+        <p><i class="fa-solid fa-phone"></i> +91 8309908876</p>
+        <p><i class="fa-solid fa-location-dot"></i> Warangal, Telangana</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <div class="footer-socials">
+          <a href="#" aria-label="GitHub Profile"><i class="fa-brands fa-github"></i></a>
+          <a href="#" aria-label="LinkedIn Profile"><i class="fa-brands fa-linkedin"></i></a>
+          <a href="mailto:karthuik@gmail.com" aria-label="Send Email"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; <span id="currentYear"></span> Karthik Yadav. Built for ApexPlanet Software Pvt. Ltd. Internship — Task 4. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ===================== BACK TO TOP BUTTON ===================== -->
+  <button class="back-to-top" id="backToTopBtn" aria-label="Back to top">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
+
+  <!-- ===================== VIEW TRANSACTION MODAL ===================== -->
+  <div class="modal-overlay" id="viewModalOverlay" hidden>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="viewModalTitle">
+      <button class="modal-close" id="viewModalCloseBtn" aria-label="Close">&times;</button>
+      <h3 id="viewModalTitle"><i class="fa-solid fa-receipt"></i> Transaction Details</h3>
+      <div class="modal-body" id="viewModalBody"></div>
+    </div>
+  </div>
+
+  <!-- ===================== DELETE CONFIRMATION MODAL ===================== -->
+  <div class="modal-overlay" id="deleteModalOverlay" hidden>
+    <div class="modal-box modal-box-small" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+      <button class="modal-close" id="deleteModalCloseBtn" aria-label="Close">&times;</button>
+      <div class="modal-icon-warning"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <h3 id="deleteModalTitle">Delete this transaction?</h3>
+      <p>Are you sure you want to delete this transaction? This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="btn btn-danger ripple" id="confirmDeleteBtn"><i class="fa-solid fa-trash"></i> Yes, Delete</button>
+        <button class="btn btn-ghost ripple" id="cancelDeleteBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SETTINGS MODAL ===================== -->
+  <div class="modal-overlay" id="settingsModalOverlay" hidden>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+      <button class="modal-close" id="settingsModalCloseBtn" aria-label="Close">&times;</button>
+      <h3 id="settingsModalTitle"><i class="fa-solid fa-gear"></i> Settings</h3>
+
+      <div class="modal-body settings-body">
+
+        <div class="setting-row">
+          <div>
+            <p class="setting-label">Theme</p>
+            <span class="setting-desc">Switch between light and dark mode</span>
+          </div>
+          <button class="btn btn-outline-sm ripple" id="settingsThemeBtn"><i class="fa-solid fa-moon"></i> Toggle</button>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <p class="setting-label">Currency</p>
+            <span class="setting-desc">Currency symbol used across the app</span>
+          </div>
+          <select id="currencySelect">
+            <option value="₹">INR (₹)</option>
+            <option value="$">USD ($)</option>
+            <option value="€">EUR (€)</option>
+            <option value="£">GBP (£)</option>
+          </select>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <p class="setting-label">Notifications</p>
+            <span class="setting-desc">Show toast notifications for actions</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notificationToggle" checked />
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <p class="setting-label">Backup Data</p>
+            <span class="setting-desc">Download a full backup of your data</span>
+          </div>
+          <button class="btn btn-outline-sm ripple" id="backupDataBtn"><i class="fa-solid fa-download"></i> Backup</button>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <p class="setting-label">Restore Data</p>
+            <span class="setting-desc">Restore data from a backup file</span>
+          </div>
+          <label class="btn btn-outline-sm ripple import-label" for="restoreFileInput">
+            <i class="fa-solid fa-upload"></i> Restore
+          </label>
+          <input type="file" id="restoreFileInput" accept="application/json" hidden />
+        </div>
+
+        <div class="setting-row setting-row-danger">
+          <div>
+            <p class="setting-label">Clear All Data</p>
+            <span class="setting-desc">Permanently delete all transactions and settings</span>
+          </div>
+          <button class="btn btn-danger ripple" id="clearAllDataBtn"><i class="fa-solid fa-trash"></i> Clear</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom JavaScript -->
+  <script src="js/script.js"></script>
+</body>
+</html>
